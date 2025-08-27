@@ -3,6 +3,7 @@ const express= require('express')
 const app=express()
 const authRoute= require('./routes/auth')
 const resourceRoute= require('./routes/resources')
+const reservationsRoute= require('./routes/reservation')
 const createDB= require('./db/createDb')
 
 (async ()=>{
@@ -11,7 +12,7 @@ const createDB= require('./db/createDb')
     })
 })
 const {initDb}= require('./db/pgDbInIt')
-const { authorize } = require('./middleware/auth')
+const { authorize, authenticate } = require('./middleware/auth')
 // (async ()=>{
 //     await createUser();
 // })();
@@ -26,8 +27,8 @@ initDb();
 app.use(express.json())
 
 app.use('/auth', authRoute)
-// app.use('/reservations')
-app.use('/resouces',authorize,resourceRoute)
+app.use('/reservations',authenticate,reservationsRoute)
+app.use('/resouces',authenticate,authorize,resourceRoute)
 
 app.get('/',(req,res)=>{
     res.send("HIII")
