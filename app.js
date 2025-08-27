@@ -12,12 +12,6 @@ const auth=require('./middleware/authentication.js')
 app.use(express.json());
 
 
-// extra packages
-
-//connectDB
-
-const connectDB= require('./db/connect')
-
 // routes
 app.get('/', (req, res) => {
 res.send('hii')
@@ -32,7 +26,6 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
-    await connectDB(process.env.MONGO_URI);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
