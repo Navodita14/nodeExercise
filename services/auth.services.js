@@ -1,14 +1,11 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const pool = require("../db/connectdb");
 
-async function createUser(name, email, password, role = "user") {
+const createUser= async(name, email, password, role = "user") =>{
   const result = await pool.query(
     `INSERT INTO users(name, email, password,role) VALUES ( $1, $2,$3, $4)`,
     [name, email, password, role]
   );
   // console.log(result);
-
   return result;
 }
 

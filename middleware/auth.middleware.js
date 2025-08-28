@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const authenticate = (req, res, next) => {
+  //fetcing header for token verification
   const authHeader = req.headers["authorization"];
   if (!authHeader) {
     res.send("No token provided");
@@ -25,6 +26,7 @@ const authorize = (req, res, next) => {
   console.log(req.body);
   console.log(req.user);
 
+  // authorizing if user is admin or normal user
   if (req.user.role != "admin") {
     return res.status(403).json({ msg: "Access Denied" });
   }

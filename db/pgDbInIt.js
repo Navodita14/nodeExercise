@@ -2,6 +2,7 @@ const pool = require("./connectdb");
 
 const initDb = async () => {
   try {
+    //creating user_role enum
     await pool.query(`
       DO $$
       BEGIN
@@ -11,6 +12,8 @@ const initDb = async () => {
       END
       $$;
       `);
+
+    //creating resource type enum
     await pool.query(`
       DO $$
       BEGIN
@@ -19,8 +22,8 @@ const initDb = async () => {
         END IF;
       END
       $$;
-      
       `);
+    //creating user table
     await pool.query(`
             CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY,          
@@ -29,6 +32,8 @@ const initDb = async () => {
             password text not null,
             role user_role DEFAULT 'user'
         );`);
+
+    //creating resources table
     await pool.query(`
             CREATE TABLE IF NOT EXISTS resources(
             resource_id SERIAL PRIMARY KEY,
@@ -36,6 +41,8 @@ const initDb = async () => {
             resource_type r_type,
             availability boolean default true
         );`);
+
+    //creating resrvations table
     await pool.query(`
             CREATE TABLE IF NOT EXISTS reservations(
             reservation_id SERIAL PRIMARY KEY,

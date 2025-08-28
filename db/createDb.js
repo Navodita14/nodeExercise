@@ -1,6 +1,7 @@
 const { Client } = require("pg");
 require("dotenv").config();
 
+// creating db
 const createDatabase = async () => {
   const dbUrl = new URL(process.env.DATABASE_URL);
   const dbName = dbUrl.pathname.replace("/", "");
