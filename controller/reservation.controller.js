@@ -1,4 +1,5 @@
 const asyncWrapper = require("../middleware/async");
+const { StatusCodes } = require('http-status-codes');
 const {
   getAllReservationsService,
   getUserReservationService,
@@ -11,9 +12,10 @@ const {
 const getUserReservation = asyncWrapper(async (req, res) => {
   const id = req.user.id;
   const userReservation = await getUserReservationService(id);
-  console.log(userReservation);
-
-  res.status(200).json(userReservation);
+  if(!userReservation){
+    res.status(StatusCodes.NOT_FOUND).send("No reservations")
+  }
+  res.status(StatusCodes.OK).json(userReservation);
 });
 // creating a reservation for a user
 const createReservation = async (req, res) => {
@@ -26,9 +28,9 @@ const createReservation = async (req, res) => {
     id
   );
   if (!reservations) {
-    res.status(400).send("Room type not available");
+    res.status(StatusCodes.NOT_FOUND).send("Room type not available");
   } else {
-    res.status(200).json(reservations);
+    res.status(StatusCodes.CREATED).json(reservations);
   }
 };
 // (deletes/cancels) reservation based on role (USER/ADMIN)
@@ -53,7 +55,7 @@ const cancelReservation = async (req, res) => {
 //gets all the reservations
 const getAllReservations = async (req, res) => {
   const allreservations = await getAllReservationsService();
-  res.status(200).json(allreservations);
+  res.status(StatusCodes.OK).json(allreservations);
 };
 
 // deleted function because of single endpoint will not call this

@@ -1,3 +1,4 @@
+const { StatusCodes } = require("http-status-codes");
 const asyncWrapper = require("../middleware/async");
 const {
   getAllResourceService,
@@ -10,21 +11,27 @@ const {
 //finds all the resources
 const getAllResource = asyncWrapper(async (req, res) => {
   const resources = await getAllResourceService();
-  res.status(200).json(resources);
+  if(!resources.length){
+    res.status(StatusCodes.NOT_FOUND).send("No resource available")
+  }
+  res.status(StatusCodes.OK).json(resources);
 });
 
 //create new resource
 const createResource = asyncWrapper(async (req, res) => {
   const { resource_name, resource_type } = req.body;
   const resources = await createResourceService(resource_name, resource_type);
-  res.status(201).json(resources);
+  res.status(StatusCodes.CREATED).json(resources);
 });
 
 //get details of resource by id
 const getResource = asyncWrapper(async (req, res) => {
   const id = req.params.id;
   const resources = await getResourceService(id);
-  res.status(200).json(resources);
+  if(!resources.length){
+    res.status(StatusCodes.NOT_FOUND).send("No such resource")
+  }
+  res.status(StatusCodes.OK).json(resources);
 });
 
 // update the resource by id
@@ -36,7 +43,7 @@ const updateResource = asyncWrapper(async (req, res) => {
     res.send("Resource not found");
   }
   const resources = await updateResourceService(id, updates);
-  res.status(200).json(resources);
+  res.status(StatusCodes.OK).json(resources);
 });
 
 const deleteResource = asyncWrapper(async (req, res) => {

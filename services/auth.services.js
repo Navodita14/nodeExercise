@@ -13,13 +13,17 @@ const getUserByEmail = async (email) => {
   const result = await pool.query(`SELECT * FROM users WHERE email=$1`, [
     email,
   ]);
+  if(!result.rows.length){
+    return "user not found"
+  }
   return result.rows[0];
 };
 
 const getUserById = async (id) => {
   const result = await pool.query(`SELECT * FROM users WHERE id=$1`, [id]);
-  // console.log(result.rows[0]);
-
+  if(!result.rows.length){
+    return "user not found"
+  }
   return result.rows[0];
 };
 

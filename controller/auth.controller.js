@@ -6,18 +6,20 @@ const {
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const asyncWrapper = require("../middleware/async");
+const { StatusCodes } = require('http-status-codes');
+
 const login = asyncWrapper(async (req, res) => {
   const { email, password } = req.body;
   //Checking if user exists
   const user = await getUserByEmail(email);
   if (!user) {
-    res.send(`user not found`);
+    res.status(StatusCodes.NOT_FOUND).send(`user not found`);
   }
 
   //Password authentication
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) {
-    res.send("Password wrong");
+    res.status(StatusCodes.UNAUTHORIZED).send("Password wrong");
   }
 
   //Generating JWT token
@@ -28,6 +30,8 @@ const login = asyncWrapper(async (req, res) => {
   );
   res.send(token);
 });
+
+
 const register = asyncWrapper(async (req, res) => {
   const { name, password, email, role } = req.body;
 
@@ -39,9 +43,13 @@ const register = asyncWrapper(async (req, res) => {
   res.status(201).json(user);
 });
 
+
 const profile = asyncWrapper(async (req, res) => {
   const id = req.user.id;
   const user = await getUserById(id);
+  if(!user){
+    res.status(StatusCodes.NOT_FOUND).send('User not found')
+  }
   res.status(200).json(user);
 });
 
