@@ -1,7 +1,7 @@
 const pool = require("../db/connectdb");
 //query to get all the resources
 const getAllResourceService = async () => {
-  const result = await pool.query(`SELECT * FROM resources`);
+  const result = await pool.query(`SELECT * FROM resources where availability=true`);
   return result.rows;
 };
 
