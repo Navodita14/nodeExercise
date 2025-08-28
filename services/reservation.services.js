@@ -54,7 +54,6 @@ const cancelReservationService = async (id, user_id, user_role) => {
   //   Select resource_id from resources where resource_name=${name}`)
   //   console.log(resource);
 
-
   let reservation = null;
 
   // get list of all reservations
@@ -73,7 +72,7 @@ const cancelReservationService = async (id, user_id, user_role) => {
     return "Reservation not found";
   }
 
- await pool.query(`
+  await pool.query(`
     delete from reservations where reservation_id= ${id};`);
   return "Reservation Cancelled";
 };

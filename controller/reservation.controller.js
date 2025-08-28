@@ -1,5 +1,5 @@
 const asyncWrapper = require("../middleware/async");
-const { StatusCodes } = require('http-status-codes');
+const { StatusCodes } = require("http-status-codes");
 const {
   getAllReservationsService,
   getUserReservationService,
@@ -12,8 +12,8 @@ const {
 const getUserReservation = asyncWrapper(async (req, res) => {
   const id = req.user.id;
   const userReservation = await getUserReservationService(id);
-  if(!userReservation){
-    res.status(StatusCodes.NOT_FOUND).send("No reservations")
+  if (!userReservation) {
+    res.status(StatusCodes.NOT_FOUND).send("No reservations");
   }
   res.status(StatusCodes.OK).json(userReservation);
 });

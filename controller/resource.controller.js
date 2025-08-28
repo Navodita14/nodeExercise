@@ -11,8 +11,8 @@ const {
 //finds all the resources
 const getAllResource = asyncWrapper(async (req, res) => {
   const resources = await getAllResourceService();
-  if(!resources.length){
-    res.status(StatusCodes.NOT_FOUND).send("No resource available")
+  if (!resources.length) {
+    res.status(StatusCodes.NOT_FOUND).send("No resource available");
   }
   res.status(StatusCodes.OK).json(resources);
 });
@@ -28,8 +28,8 @@ const createResource = asyncWrapper(async (req, res) => {
 const getResource = asyncWrapper(async (req, res) => {
   const id = req.params.id;
   const resources = await getResourceService(id);
-  if(!resources.length){
-    res.status(StatusCodes.NOT_FOUND).send("No such resource")
+  if (!resources.length) {
+    res.status(StatusCodes.NOT_FOUND).send("No such resource");
   }
   res.status(StatusCodes.OK).json(resources);
 });

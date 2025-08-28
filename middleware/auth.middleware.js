@@ -6,7 +6,9 @@ const authenticate = (req, res, next) => {
   //fetcing header for token verification
   const authHeader = req.headers["authorization"];
   if (!authHeader) {
-    res.status(StatusCodes.NETWORK_AUTHENTICATION_REQUIRED).send("No token provided");
+    res
+      .status(StatusCodes.NETWORK_AUTHENTICATION_REQUIRED)
+      .send("No token provided");
   }
   const token = authHeader;
   // console.log(token);
@@ -19,7 +21,7 @@ const authenticate = (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(StatusCodes.UNAUTHORIZED).send("Not authenticated")
+    res.status(StatusCodes.UNAUTHORIZED).send("Not authenticated");
     console.log(error);
   }
 };
