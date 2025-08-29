@@ -1,59 +1,120 @@
+// const { StatusCodes } = require("http-status-codes");
+// const asyncWrapper = require("../middleware/async");
+// const {
+//   getAllResourceService,
+//   getResourceService,
+//   createResourceService,
+//   updateResourceService,
+//   deleteResourceService,
+// } = require("../services/resource.services");
+
+// //finds all the resources
+// const getAllResource = asyncWrapper(async (req, res) => {
+//   const resources = await getAllResourceService();
+//   if (!resources.length) {
+//     res.status(StatusCodes.NOT_FOUND).send("No resource available");
+//   }
+//   res.status(StatusCodes.OK).json(resources);
+// });
+
+// //create new resource
+// const createResource = asyncWrapper(async (req, res) => {
+//   const { resource_name, resource_type } = req.body;
+//   const resources = await createResourceService(resource_name, resource_type);
+//   res.status(StatusCodes.CREATED).json(resources);
+// });
+
+// //get details of resource by id
+// const getResource = asyncWrapper(async (req, res) => {
+//   const id = req.params.id;
+//   const resources = await getResourceService(id);
+//   if (!resources.length) {
+//     res.status(StatusCodes.NOT_FOUND).send("No such resource");
+//   }
+//   res.status(StatusCodes.OK).json(resources);
+// });
+
+// // update the resource by id
+// const updateResource = asyncWrapper(async (req, res) => {
+//   const updates = req.body;
+//   const id = req.params.id;
+//   //checking if resource exists
+//   if (!(await getResourceService(id))) {
+//     res.send("Resource not found");
+//   }
+//   const resources = await updateResourceService(id, updates);
+//   res.status(StatusCodes.OK).json(resources);
+// });
+
+// const deleteResource = asyncWrapper(async (req, res) => {
+//   if (!(await getResourceService(req.params.id))) {
+//     res.send("Resource not found");
+//   }
+//   const resources = await deleteResourceService(req.params.id);
+//   res.status(200).json(resources);
+// });
+
+// module.exports = {
+//   getAllResource,
+//   getResource,
+//   updateResource,
+//   createResource,
+//   deleteResource,
+// };
+
+
 const { StatusCodes } = require("http-status-codes");
 const asyncWrapper = require("../middleware/async");
-const {
-  getAllResourceService,
-  getResourceService,
-  createResourceService,
-  updateResourceService,
-  deleteResourceService,
-} = require("../services/resource.services");
+const resourceService = require("../services/resource.services");
 
-//finds all the resources
+// finds all the resources
 const getAllResource = asyncWrapper(async (req, res) => {
-  const resources = await getAllResourceService();
+  const resources = await resourceService.getAllResource();
   if (!resources.length) {
-    res.status(StatusCodes.NOT_FOUND).send("No resource available");
+    return res.status(StatusCodes.NOT_FOUND).send("No resource available");
   }
   res.status(StatusCodes.OK).json(resources);
 });
 
-//create new resource
+
+// create new resource
 const createResource = asyncWrapper(async (req, res) => {
   const { resource_name, resource_type } = req.body;
-  const resources = await createResourceService(resource_name, resource_type);
+  const resources = await resourceService.createResource(resource_name, resource_type);
   res.status(StatusCodes.CREATED).json(resources);
 });
 
-//get details of resource by id
+
+// get details of resource by id
 const getResource = asyncWrapper(async (req, res) => {
   const id = req.params.id;
-  const resources = await getResourceService(id);
-  if (!resources.length) {
-    res.status(StatusCodes.NOT_FOUND).send("No such resource");
+  const resource = await resourceService.getResource(id);
+  if (!resource) {
+    return res.status(StatusCodes.NOT_FOUND).send("Resource not found");
   }
-  res.status(StatusCodes.OK).json(resources);
+  res.status(StatusCodes.OK).json(resource);
 });
 
 // update the resource by id
 const updateResource = asyncWrapper(async (req, res) => {
   const updates = req.body;
   const id = req.params.id;
-  //checking if resource exists
-  if (!(await getResourceService(id))) {
-    res.send("Resource not found");
+  const resource = await resourceService.updateResource(id, updates);
+  if (!resource) {
+    return res.status(StatusCodes.NOT_FOUND).send("Resource not found");
   }
-  const resources = await updateResourceService(id, updates);
-  res.status(StatusCodes.OK).json(resources);
+  res.status(StatusCodes.OK).json(resource);
 });
 
+
+// delete the resource
 const deleteResource = asyncWrapper(async (req, res) => {
-  if (!(await getResourceService(req.params.id))) {
-    res.send("Resource not found");
+  const deleted = await resourceService.deleteResource(req.params.id);
+  if (!deleted) {
+    return res.status(StatusCodes.NOT_FOUND).send("Resource not found");
   }
-  const resources = await deleteResourceService(req.params.id);
-  res.status(200).json(resources);
+  res.status(StatusCodes.OK).json({ msg: "Resource deleted" });
 });
-
 module.exports = {
   getAllResource,
   getResource,

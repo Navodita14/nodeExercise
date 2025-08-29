@@ -16,12 +16,10 @@ const registerUser = async (name, email, password, role = "user") => {
   return repo.createUser(name, email, hashedPassword, role);
 };
 
-
-
 const loginUser = async (email, password) => {
-  const user =await repo.getUserByEmail(email);
+  const user = await repo.getUserByEmail(email);
   console.log(user);
-  
+
   if (!user) {
     throw new Error("User does not exists");
   }
@@ -36,8 +34,5 @@ const loginUser = async (email, password) => {
   );
   return token;
 };
-
-
-
 
 module.exports = { registerUser, loginUser };
