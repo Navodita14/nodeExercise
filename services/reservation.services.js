@@ -18,7 +18,7 @@ const createReservationService = async (
     SELECT * FROM resources where resource_type= $1 and availability = true;
     `,
     [resource_type]
-  );
+  ); 
   // console.log(available);
 
   if (!available.rows.length) {

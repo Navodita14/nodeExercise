@@ -1,30 +1,43 @@
-const pool = require("../db/connectdb");
+const jwt = require("jsonwebtoken");
+const repo = require("../repository/auth.repo");
+const bcrypt = require("bcrypt");
 
-const createUser = async (name, email, password, role = "user") => {
-  const result = await pool.query(
-    `INSERT INTO users(name, email, password,role) VALUES ( $1, $2,$3, $4)`,
-    [name, email, password, role]
+const registerUser = async (name, email, password, role = "user") => {
+  //find if user is already registered or not
+
+  if (await repo.getUserByEmail(email)) {
+    throw new Error("User already exists");
+  }
+
+  //Hashing Password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  return repo.createUser(name, email, hashedPassword, role);
+};
+
+
+
+const loginUser = async (email, password) => {
+  const user =await repo.getUserByEmail(email);
+  console.log(user);
+  
+  if (!user) {
+    throw new Error("User does not exists");
+  }
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) {
+    throw new Error("Pasword does not match");
+  }
+  const token = jwt.sign(
+    { id: user.id, role: user.role, name: user.name },
+    process.env.JWT_SECRET,
+    { expiresIn: "30d" }
   );
-  // console.log(result);
-  return result;
+  return token;
 };
 
-const getUserByEmail = async (email) => {
-  const result = await pool.query(`SELECT * FROM users WHERE email=$1`, [
-    email,
-  ]);
-  if (!result.rows.length) {
-    return "user not found";
-  }
-  return result.rows[0];
-};
 
-const getUserById = async (id) => {
-  const result = await pool.query(`SELECT * FROM users WHERE id=$1`, [id]);
-  if (!result.rows.length) {
-    return "user not found";
-  }
-  return result.rows[0];
-};
 
-module.exports = { createUser, getUserByEmail, getUserById };
+
+module.exports = { registerUser, loginUser };

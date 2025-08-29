@@ -2,7 +2,7 @@ const asyncWrapper = require("../middleware/async");
 const { StatusCodes } = require("http-status-codes");
 const {
   getAllReservationsService,
-  getUserReservationService,
+  getUserReservationService, 
   createReservationService,
   cancelReservationService,
   // deleteAnyReservationService,
