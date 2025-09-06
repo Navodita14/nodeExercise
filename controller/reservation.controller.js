@@ -2,7 +2,6 @@ const asyncWrapper = require("../middleware/async");
 const { StatusCodes } = require("http-status-codes");
 const reservationService = require("../services/reservation.services");
 
-
 const getUserReservation = asyncWrapper(async (req, res) => {
   const id = req.user.id;
   const userReservation = await reservationService.getUserReservation(id);
@@ -11,7 +10,6 @@ const getUserReservation = asyncWrapper(async (req, res) => {
   }
   res.status(StatusCodes.OK).json(userReservation);
 });
-
 
 const createReservation = asyncWrapper(async (req, res) => {
   const { resource_type, start_time, end_time } = req.body;
@@ -28,15 +26,17 @@ const createReservation = asyncWrapper(async (req, res) => {
   res.status(StatusCodes.CREATED).json(reservations);
 });
 
-
 // (deletes/cancels) reservation based on role (USER/ADMIN)
 const cancelReservation = asyncWrapper(async (req, res) => {
   const id = req.params.id;
   const role = req.user.role;
-  const cancellation = await reservationService.cancelReservation(id, req.user.id, role);
+  const cancellation = await reservationService.cancelReservation(
+    id,
+    req.user.id,
+    role
+  );
   res.send(cancellation);
 });
-
 
 //gets all the reservations
 const getAllReservations = asyncWrapper(async (req, res) => {

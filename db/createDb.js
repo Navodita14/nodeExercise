@@ -17,6 +17,8 @@ const createDatabase = async () => {
     `SELECT 1 FROM pg_database WHERE datname = $1`,
     [dbName]
   );
+  console.log(dbName, res);
+  
 
   if (res.rowCount === 0) {
     await client.query(`CREATE DATABASE ${dbName}`);

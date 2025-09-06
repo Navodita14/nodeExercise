@@ -1,8 +1,7 @@
 const repo = require("../repository/reservation.repo");
 
-
 const getUserReservation = async (id) => {
-  return repo.getUserReservation(id);
+  return await repo.getUserReservation(id);
 };
 const createReservation = async (
   resource_type,
